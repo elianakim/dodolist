@@ -1,0 +1,11 @@
+# Node
+node_modules/
+logs/
+
+# Data files (user-specific, auto-generated on startup)
+data/todos.json
+data/settings.json
+
+# GIFs — keep only the bundled default, ignore user uploads
+data/gifs/*
+!data/gifs/twerking_pikachu.gif

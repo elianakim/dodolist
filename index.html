@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dodolist</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="logo"><em>dodo</em><span class="logo-accent">list</span></div>
+  <div class="header-mid" id="header-mid"></div>
+  <div class="header-right">
+    <button class="hdr-btn" id="settings-btn">⚙︎&thinsp;Settings</button>
+    <button class="hdr-btn" id="search-btn">🔍&thinsp;Search <span style="opacity:.5;font-size:10px;margin-left:2px">⌘K</span></button>
+  </div>
+</header>
+
+<!-- SPLIT CONTENT -->
+<div id="app-body">
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div id="sidebar-inner"></div>
+  <div class="sb-footer">
+    <button class="hdr-btn sb-archive-btn" id="archive-btn">🗄&thinsp;Archive</button>
+  </div>
+</div>
+
+<div id="sb-resizer"></div>
+
+<div id="content">
+  <div id="today-pane"></div>
+
+  <div id="tab-area">
+    <div id="tab-bar">
+      <button class="folder-tab" data-tab="p0" title="Urgent & Important"><span class="tab-dot"></span>P0<span class="tab-count" id="tc-p0"></span></button>
+      <button class="folder-tab" data-tab="p1" title="Important"><span class="tab-dot"></span>P1<span class="tab-count" id="tc-p1"></span></button>
+      <button class="folder-tab" data-tab="p2" title="Urgent"><span class="tab-dot"></span>P2<span class="tab-count" id="tc-p2"></span></button>
+      <button class="folder-tab" data-tab="p3" title="Someday"><span class="tab-dot"></span>P3<span class="tab-count" id="tc-p3"></span></button>
+      <div class="tab-sort" id="tab-sort-wrap">
+        <div class="shortcut-help">
+          <button class="shortcut-btn">?</button>
+          <div class="shortcut-tooltip">
+            <div class="sc-row"><kbd>/</kbd><span>Focus quick-add</span></div>
+            <div class="sc-row"><kbd>↑ ↓</kbd><span>Navigate tasks</span></div>
+            <div class="sc-row"><kbd>Enter</kbd><span>Expand / collapse</span></div>
+            <div class="sc-row"><kbd>x</kbd><span>Check / uncheck</span></div>
+            <div class="sc-row"><kbd>t</kbd><span>Pin to Today</span></div>
+            <div class="sc-row"><kbd>d</kbd><span>Delete</span></div>
+            <div class="sc-row"><kbd>1–4</kbd><span>Switch tab</span></div>
+            <div class="sc-row"><kbd>⌘K</kbd><span>Search</span></div>
+            <div class="sc-row"><kbd>Esc</kbd><span>Deselect / close</span></div>
+          </div>
+        </div>
+        <span class="sort-label">Sort</span>
+        <select class="sort-select" id="sort-select">
+          <option value="manual">Manual order</option>
+          <option value="due">Due date</option>
+          <option value="created">Date added</option>
+        </select>
+      </div>
+    </div>
+    <div id="category-pane"></div>
+  </div>
+</div>
+
+</div><!-- #app-body -->
+
+<!-- ARCHIVE MODAL -->
+<div id="archive-overlay">
+  <div class="archive-modal">
+    <div class="archive-modal-header">
+      <div class="archive-modal-title">Archive</div>
+      <button class="archive-close-btn" id="archive-close-btn">✕</button>
+    </div>
+    <div class="archive-modal-body" id="archive-modal-body"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-overlay">
+  <div class="settings-modal">
+    <div class="settings-modal-header">
+      <div class="settings-modal-title">Settings</div>
+      <button class="archive-close-btn" id="settings-close-btn">✕</button>
+    </div>
+    <div class="settings-modal-body">
+      <div class="settings-section">
+        <div class="settings-section-title">Celebration</div>
+        <div class="settings-subsection-lbl">Messages <span class="settings-sub-hint">— one is picked randomly on each completion</span></div>
+        <div class="message-list" id="message-list"></div>
+        <div class="msg-add-row">
+          <input class="msg-add-inp" id="msg-add-inp" placeholder="Add a message…" maxlength="60" autocomplete="off">
+          <button class="msg-add-btn" id="msg-add-btn">+ Add</button>
+        </div>
+        <div class="settings-subsection-lbl" style="margin-top:16px">GIFs <span class="settings-sub-hint">— a random one plays on completion</span></div>
+        <div class="gif-upload-area" id="gif-upload-area">
+          Drop GIFs here or <label class="gif-browse-lbl" for="gif-file-inp">browse</label>
+          <div class="gif-hint-sub">GIF only · max 2 MB each</div>
+        </div>
+        <input type="file" id="gif-file-inp" accept="image/gif" multiple style="display:none">
+        <div class="gif-grid" id="gif-grid"></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Colors</div>
+        <div id="color-rows"></div>
+        <button class="btn-reset-colors" id="reset-colors-btn">Reset to defaults</button>
+      </div>
+    </div>
+    <div class="settings-footer">
+      <button class="settings-cancel-btn" id="settings-cancel-btn">Cancel</button>
+      <button class="settings-save-btn" id="settings-save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay">
+  <div class="search-modal">
+    <div class="search-top">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="search-input" placeholder="Search tasks, notes, subtasks…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="search-results" id="search-results"></div>
+  </div>
+</div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>
