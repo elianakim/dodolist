@@ -455,7 +455,7 @@ export function renderSidebar() {
   h += `</div></div>`;
 
   // ── 3. Recent activity ────────────────────────────────────────────
-  const recent = [...S.archive]
+  const recent = [...S.archive, ...S.todos.filter(t => t.done && t.doneAt)]
     .sort((a, b) => (b.doneAt ?? b.archivedAt ?? 0) - (a.doneAt ?? a.archivedAt ?? 0))
     .slice(0, 8);
 
