@@ -796,6 +796,12 @@ document.getElementById('gif-grid').addEventListener('input', e => {
   const src = settingsDraft.gifs[i];
   if (src) settingsDraft.gifNames[src] = el.textContent.trim();
 });
+document.getElementById('gif-grid').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.closest('.gif-name')) {
+    e.preventDefault();
+    e.target.blur();
+  }
+});
 
 // ── Color pickers (live preview of draft) ─────────────────────────
 document.getElementById('color-rows').addEventListener('input', e => {
