@@ -65,26 +65,29 @@ function renderToday() {
   const dl          = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   let h = `
-    <div class="today-header">
-      <div class="today-title">Today</div>
-      <div class="today-date">${esc(dl)}</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-row">
-        <span class="progress-label">${doneCount} of ${total} done</span>
-        <span class="progress-pct">${pct}%</span>
+    <div class="today-sticky">
+      <div class="today-header">
+        <div class="today-title">Today</div>
+        <div class="today-date">${esc(dl)}</div>
       </div>
-      <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+      <div class="progress-wrap">
+        <div class="progress-row">
+          <span class="progress-label">${doneCount} of ${total} done</span>
+          <span class="progress-pct">${pct}%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+      </div>
     </div>
-    <div class="task-grid">
+    <div class="today-scroll"><div class="task-grid">
   `;
 
   if (inProgress.length === 0 && done.length === 0) {
     h += `<div class="empty-state">📌 Pin tasks to see them here.<br>Hover a card and press <kbd>T</kbd>, or click 📌.</div>`;
   }
-  for (const t of inProgress) h += card(t, false);   // celebrating tasks stay in their original position
+  for (const t of inProgress) h += card(t, false, true);   // celebrating tasks stay in their original position
   h += `</div>`;
   h += doneSection('today', done, false);
+  h += `</div>`;
   pane.innerHTML = h;
   // Animate progress bar from 0 → target (CSS transition requires a state change on existing element)
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -146,7 +149,7 @@ function doneSection(key, tasks, showFocus = true) {
 
 // ─── TASK CARD ────────────────────────────────────────────────────
 
-function card(task, showFocus = true) {
+function card(task, showFocus = true, showPBadge = false) {
   const exp     = S.expanded.has(task.id);
   const td      = today();
   const overdue = task.dueDate && task.dueDate < td && !task.done;
@@ -182,7 +185,7 @@ function card(task, showFocus = true) {
         <span class="drag-handle">⠿</span>
         ${cbOrGif}
         <div class="task-body">
-          <div class="task-text" data-a="edit" data-id="${esc(task.id)}">${esc(task.text)}</div>
+          <div class="task-text" data-a="edit" data-id="${esc(task.id)}">${showPBadge ? `<span class="task-p-badge" style="background:${(P_META[task.priority] ?? P_META.p3).color}">${task.priority.toUpperCase()}</span>` : ''}${esc(task.text)}</div>
           ${dueChip || recChip ? `<div class="task-chips">${dueChip}${recChip}</div>` : ''}
         </div>
         <div class="task-actions">
