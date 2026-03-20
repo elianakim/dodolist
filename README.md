@@ -1,6 +1,6 @@
 # todos
 
-A minimal, local-first todo manager. No cloud, no accounts, no dependencies — just Node.js and a browser.
+A local todo manager powered by nothing but Node.js and a browser. Pikachu will twerk for you every time you check something off :3
 
 ## Features
 
@@ -91,6 +91,6 @@ Both JSON files are auto-created with defaults on first run.
 
 ## GIF sources
 
-Favorite source: [slackemojis.com](https://slackemojis.com/)
+Favorite source: [slackmojis.com](https://slackmojis.com)
 
  `data/todos.json` and `data/settings.json` are gitignored — your data stays local. Only `data/gifs/twerking_pikachu.gif` (the bundled default) is tracked.
