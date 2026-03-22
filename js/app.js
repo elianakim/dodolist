@@ -13,6 +13,14 @@ const celebrationTimers = new Map();   // taskId → timer handle
 
 // ─── PANEL WIRING ────────────────────────────────────────────────
 
+// ─── MULTI-TAB SYNC ───────────────────────────────────────────────
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    load().then(() => render());
+  }
+});
+
 function wire(el) {
   el.addEventListener('click',    handleClick);
   el.addEventListener('change',   handleChange);
