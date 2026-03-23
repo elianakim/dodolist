@@ -1,5 +1,5 @@
 import { P_META, PS } from './constants.js';
-import { S, esc, today, sorted } from './state.js';
+import { S, esc, today, sorted, localDate } from './state.js';
 import { SS, gifDisplayName } from './settings.js';
 
 // ─── TOP-LEVEL RENDER ─────────────────────────────────────────────
@@ -245,7 +245,7 @@ function buildHeatmap(archive, selectedDay, numWeeks = 18) {
   for (const t of archive) {
     const ms = t.doneAt || t.archivedAt;
     if (!ms) continue;
-    const d = new Date(ms).toISOString().slice(0, 10);
+    const d = localDate(ms);
     counts[d] = (counts[d] || 0) + 1;
   }
 
@@ -265,7 +265,7 @@ function buildHeatmap(archive, selectedDay, numWeeks = 18) {
   for (let w = 0; w < WEEKS; w++) {
     const week = [];
     for (let d = 0; d < 7; d++) {
-      const dateStr = cur.toISOString().slice(0, 10);
+      const dateStr = localDate(cur.getTime());
       week.push(cur <= todayD ? { date: dateStr, count: counts[dateStr] || 0 } : null);
       cur.setDate(cur.getDate() + 1);
     }
@@ -395,7 +395,7 @@ export function renderSidebar() {
   if (S.sidebarSelectedDay) {
     const dayTasks = allDone.filter(t => {
       const ms = t.doneAt || t.archivedAt;
-      return ms && new Date(ms).toISOString().slice(0, 10) === S.sidebarSelectedDay;
+      return ms && localDate(ms) === S.sidebarSelectedDay;
     });
     const label = new Date(S.sidebarSelectedDay + 'T12:00:00')
       .toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -417,13 +417,14 @@ export function renderSidebar() {
   const cheerSource = isDailyView
     ? allDone.filter(t => {
         const ms = t.doneAt ?? t.archivedAt;
-        return ms && new Date(ms).toISOString().slice(0, 10) === todayStr;
+        return ms && localDate(ms) === todayStr;
       })
     : allDone;
 
   const gifCounts = {};
   for (const t of cheerSource) {
-    if (t.celebrationGif) gifCounts[t.celebrationGif] = (gifCounts[t.celebrationGif] || 0) + 1;
+    const gif = t.celebrationGif ?? SS.gifs[0];
+    if (gif) gifCounts[gif] = (gifCounts[gif] || 0) + 1;
   }
   const gifEntries = Object.entries(gifCounts).sort((a, b) => b[1] - a[1]);
 

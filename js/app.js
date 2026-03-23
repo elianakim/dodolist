@@ -16,7 +16,7 @@ const celebrationTimers = new Map();   // taskId → timer handle
 // ─── MULTI-TAB SYNC ───────────────────────────────────────────────
 
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
+  if (document.visibilityState === 'visible' && S.celebrating.size === 0) {
     load().then(() => render());
   }
 });
@@ -253,7 +253,7 @@ function triggerCelebration(task) {
 
   const timer = setTimeout(() => {
     const t = byId(task.id);
-    if (t) { t.done = true; t.doneAt = Date.now(); }
+    if (t) { t.done = true; t.doneAt = Date.now(); if (!t.celebrationGif) t.celebrationGif = gif; }
     S.celebrating.delete(task.id);
     celebrationTimers.delete(task.id);
 
@@ -503,7 +503,9 @@ document.addEventListener('keydown', e => {
   }
 
   // ── Block shortcuts while typing elsewhere ──────────────────────
-  if (typing) return;
+  // Exception: allow t/T on hovered task even when quick-add input is focused
+  const isQuickAdd = active.classList.contains('quick-add-input');
+  if (typing && !(isQuickAdd && hoverId && (e.key === 't' || e.key === 'T'))) return;
 
   // "/" — focus quick-add input for current tab
   if (e.key === '/') {

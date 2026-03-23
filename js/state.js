@@ -2,9 +2,10 @@ import { PS } from './constants.js';
 
 // ─── HELPERS ──────────────────────────────────────────────────────
 
-export const uid   = () => crypto.randomUUID();
-export const today = () => new Date().toISOString().slice(0, 10);
-export const esc   = s  => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+export const uid       = () => crypto.randomUUID();
+export const localDate = (ms) => { const d = ms == null ? new Date() : new Date(ms); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+export const today     = () => localDate();
+export const esc       = s  => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 function debounce(fn, ms) {
   let timer;
